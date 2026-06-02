@@ -1,0 +1,42 @@
+@rootUrl = http://localhost:5199
+
+###
+GET {{rootUrl}}/VacationRequests/
+Accept: application/json
+
+###
+GET {{rootUrl}}/VacationRequests/3
+Accept: application/json
+
+###
+POST {{rootUrl}}/VacationRequests/
+Content-Type: application/json
+{
+  "userId": 3,
+  "startDate": "2026-05-09",
+  "endDate": "2026-05-20",
+  "comment": "test vacation"
+}
+
+###
+PUT {{rootUrl}}/VacationRequests/1
+Content-Type: application/json
+
+{
+    "startDate": "2026-01-09",
+    "endDate": "2026-01-20",
+    "comment": "test vacation updated"
+
+}
+
+###
+DELETE {{rootUrl}}/VacationRequests/3
+Content-Type: application/json
+
+###
+POST {{rootUrl}}/VacationRequests/1/approve
+Content-Type: application/json
+
+###
+POST {{rootUrl}}/VacationRequests/2/reject
+Content-Type: application/json
