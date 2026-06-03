@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VacationAppBackEnd.DTOs;
 using VacationAppBackEnd.Models;
+using VacationAppBackEnd.Services;
 
 namespace VacationAppBackEnd.Controllers
 {
@@ -53,16 +54,22 @@ namespace VacationAppBackEnd.Controllers
             }
         };
 
+        private readonly IVacationRequestService _service;
+        public VacationRequestsController(IVacationRequestService service)
+        {
+            _service = service;
+        }
+
         [HttpGet]
         public ActionResult<List<VacationRequest>> GetVacationRequests()
         {
-            return Ok(vacationrequests);
+            return Ok(_service.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult<VacationRequest> GetVacationRequestById(int id)
         {
-            var VacationRequest = vacationrequests.FirstOrDefault(item => item.Id == id);
+            var VacationRequest = _service.GetById(id);
             if (VacationRequest == null) 
                 return NotFound();
             return Ok(VacationRequest);
@@ -73,21 +80,18 @@ namespace VacationAppBackEnd.Controllers
         {
             if(dto == null)
                 return BadRequest();
-            if (dto.EndDate < dto.StartDate)
-                return BadRequest("End date cannot be earlier than start date.");
-            var vacationRequest = new VacationRequest
-            {
-                Id = vacationrequests.Count != 0 ? vacationrequests.Max(x => x.Id) + 1 : 1,
-                UserId = dto.UserId,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                Comment = dto.Comment,
-                Status = Enums.VacationRequestStatus.Pending,
-                CreatedAt = DateTime.Now
-            };
 
-            vacationrequests.Add(vacationRequest);
-            return CreatedAtAction(nameof(GetVacationRequestById), new { id = vacationRequest.Id }, vacationRequest);
+            try
+            {
+                var vacationRequest = _service.Create(dto);
+                return CreatedAtAction(nameof(GetVacationRequestById), new { id = vacationRequest.Id }, vacationRequest);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+          
         }
 
         [HttpPut("{id}")]
@@ -95,74 +99,76 @@ namespace VacationAppBackEnd.Controllers
         {
             if (dto == null)
                 return BadRequest();
-            var existingRequest= vacationrequests.FirstOrDefault(item => item.Id == id);
-
-            if (existingRequest == null)
-                return NotFound();
-
-            if(existingRequest.Status != Enums.VacationRequestStatus.Pending)
-                return BadRequest("Only pending requests can be updated.");
-
-            if(dto.EndDate < dto.StartDate)
-                return BadRequest("End date cannot be earlier than start date.");
-
-            existingRequest.StartDate = dto.StartDate;
-            existingRequest.EndDate = dto.EndDate;
-
-            if (!string.IsNullOrWhiteSpace(dto.Comment))
+            try
             {
-                existingRequest.Comment = dto.Comment;
+                var result = _service.Update(id, dto);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
             }
-               
-            return Ok(existingRequest);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
 
         [HttpDelete("{id}")]
         public ActionResult DeleteVacationRequestById(int id)
         {
-            var existingRequest = vacationrequests.FirstOrDefault(item => item.Id == id);
-            if (existingRequest == null)
-                return NotFound();
+            try
+            {
+                var result = _service.Delete(id);
 
-            if(existingRequest.Status != Enums.VacationRequestStatus.Pending)
-                return BadRequest("Only pending requests can be deleted.");
+                if (!result)
+                    return NotFound();
 
-            vacationrequests.Remove(existingRequest);
-            return NoContent();
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost("{id}/approve")]
         public ActionResult<VacationRequest> ApproveVacationRequestById(int id)
         {
-            var existingRequest = vacationrequests.FirstOrDefault(item => item.Id == id);
-            if (existingRequest == null)
-                return NotFound();
-            if(existingRequest.Status != Enums.VacationRequestStatus.Pending)
-                return BadRequest($"The request is already {existingRequest.Status}");
-            existingRequest.Status = Enums.VacationRequestStatus.Approved;
-            existingRequest.DecisionDate = DateTime.Now;
+            try
+            {
+                var result = _service.Approve(id);
+                if (result == null)
+                    return NotFound();
 
-            // TODO: replace with authenticated user once auth is implemented
-            existingRequest.ReviewedById = 1;
-            
-            return Ok(existingRequest);
+
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
 
         [HttpPost("{id}/reject")]
         public ActionResult<VacationRequest> RejectVacationRequestById(int id)
         {
-            var existingRequest = vacationrequests.FirstOrDefault(item => item.Id == id);
-            if (existingRequest == null)
-                return NotFound();
-            if (existingRequest.Status != Enums.VacationRequestStatus.Pending)
-                return BadRequest($"The request is already {existingRequest.Status}");
-            existingRequest.Status = Enums.VacationRequestStatus.Rejected;
-            existingRequest.DecisionDate = DateTime.Now;
+            try
+            {
+                var result = _service.Reject(id);
+                if (result == null)
+                    return NotFound();
 
-            // TODO: replace with authenticated user once auth is implemented
-            existingRequest.ReviewedById = 1;
 
-            return Ok(existingRequest);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
