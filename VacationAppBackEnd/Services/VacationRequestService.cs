@@ -1,15 +1,21 @@
-﻿using VacationAppBackEnd.DTOs;
+﻿using VacationAppBackEnd.Data;
+using VacationAppBackEnd.DTOs;
 using VacationAppBackEnd.Models;
 
 namespace VacationAppBackEnd.Services
 {
     public class VacationRequestService: IVacationRequestService
     {
-        private static List<VacationRequest> vacationrequests = new List<VacationRequest>();
 
-        public List<VacationRequest> GetAll() => vacationrequests;
+        private readonly AppDbContext _context;
 
-        public VacationRequest? GetById(int id) => vacationrequests.FirstOrDefault(v => v.Id == id);
+        public VacationRequestService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public List<VacationRequest> GetAll() => _context.VacationRequests.ToList();
+        public VacationRequest? GetById(int id) => _context.VacationRequests.FirstOrDefault(v => v.Id == id);
 
         public VacationRequest Create(VacationRequestDTO dto)
         {
@@ -19,16 +25,17 @@ namespace VacationAppBackEnd.Services
 
             var newRequest = new VacationRequest
             {
-                Id = vacationrequests.Count != 0 ? vacationrequests.Max(x => x.Id) + 1 : 1,
+                
                 UserId = dto.UserId,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 Comment = dto.Comment,
                 Status = Enums.VacationRequestStatus.Pending,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
-            vacationrequests.Add(newRequest);
+            _context.VacationRequests.Add(newRequest);
+            _context.SaveChanges();
             return newRequest;
         }
 
@@ -51,6 +58,7 @@ namespace VacationAppBackEnd.Services
             if(!string.IsNullOrWhiteSpace(dto.Comment))
                 existingRequest.Comment = dto.Comment;
 
+            _context.SaveChanges();
             return existingRequest;
 
         }
@@ -65,7 +73,8 @@ namespace VacationAppBackEnd.Services
             if(existingRequest.Status != Enums.VacationRequestStatus.Pending)
                 return false;
            
-            vacationrequests.Remove(existingRequest);
+            _context.VacationRequests.Remove(existingRequest);
+            _context.SaveChanges();
             return true;
         }
 
@@ -78,8 +87,10 @@ namespace VacationAppBackEnd.Services
             }
 
             existingRequest.Status = Enums.VacationRequestStatus.Approved;
-            existingRequest.DecisionDate = DateTime.Now;
+            existingRequest.DecisionDate = DateTime.UtcNow;
             existingRequest.ReviewedById = 1; // Simulate admin user ID
+
+            _context.SaveChanges();
             return existingRequest;
 
         }
@@ -92,8 +103,11 @@ namespace VacationAppBackEnd.Services
             }
 
             existingRequest.Status = Enums.VacationRequestStatus.Rejected;
-            existingRequest.DecisionDate = DateTime.Now;
+            existingRequest.DecisionDate = DateTime.UtcNow;
             existingRequest.ReviewedById = 1; // Simulate admin user ID
+
+
+            _context.SaveChanges();
             return existingRequest;
 
         }

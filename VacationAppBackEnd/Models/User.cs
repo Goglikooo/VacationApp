@@ -14,6 +14,6 @@ namespace VacationAppBackEnd.Models
         public int? SupervisorId { get; set; }
         public User? Supervisor { get; set; }
         public List<User> Subordinates { get; set; } = new();
-        public DateOnly CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -10,8 +10,7 @@ namespace VacationAppBackEnd.Controllers
     [ApiController]
     public class VacationRequestsController : ControllerBase
     {
-
-
+        
         private readonly IVacationRequestService _service;
         public VacationRequestsController(IVacationRequestService service)
         {

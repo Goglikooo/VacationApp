@@ -1,6 +1,7 @@
-
 using System.Text.Json.Serialization;
 using VacationAppBackEnd.Services;
+using Microsoft.EntityFrameworkCore;
+using VacationAppBackEnd.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
         new JsonStringEnumConverter()
     );
 });
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IVacationRequestService, VacationRequestService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
