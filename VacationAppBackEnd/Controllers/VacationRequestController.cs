@@ -11,48 +11,6 @@ namespace VacationAppBackEnd.Controllers
     public class VacationRequestsController : ControllerBase
     {
 
-        static List<VacationRequest> vacationrequests = new List<VacationRequest>
-        {
-            new VacationRequest() {
-
-                Id = 1,
-                    UserId = 1,
-                    RequestedBy = new User {
-                        Id = 1,
-                        FirstName = "pirveli",
-                        LastName = "pirvelishvili",
-                        Email = "pirvelii@gmail.com",
-                        PasswordHash = "hashedpassword",
-                        Role = Enums.UserRole.Employee,
-                        RemainingVacationDays = 15,
-                        CreatedAt = DateOnly.FromDateTime(DateTime.Now)
-                    },
-                    StartDate = DateOnly.FromDateTime(DateTime.Now.AddDays(10)),
-                    EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(15)),
-                    Status = Enums.VacationRequestStatus.Pending,
-                    Comment = "Family vacation",
-                    CreatedAt = DateTime.Now
-            },
-            new VacationRequest() {
-                Id = 2,
-                    UserId = 1,
-                    RequestedBy = new User {
-                        Id = 1,
-                        FirstName = "Meore",
-                        LastName = "Meoreshvili",
-                        Email = "Meore@gmail.com",
-                        PasswordHash = "hashedpassword",
-                        Role = Enums.UserRole.Employee,
-                        RemainingVacationDays = 15,
-                        CreatedAt = DateOnly.FromDateTime(DateTime.Now)
-                    },
-                    StartDate = DateOnly.FromDateTime(DateTime.Now.AddDays(20)),
-                    EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(25)),
-                    Status = Enums.VacationRequestStatus.Pending,
-                    Comment = "Family vacation2",
-                    CreatedAt = DateTime.Now
-            }
-        };
 
         private readonly IVacationRequestService _service;
         public VacationRequestsController(IVacationRequestService service)
