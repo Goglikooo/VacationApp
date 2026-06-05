@@ -18,29 +18,29 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<VacationRequest>> GetVacationRequests()
+        public async Task<ActionResult<List<VacationRequest>>> GetVacationRequests()
         {
-            return Ok(_service.GetAll());
+            return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<VacationRequest> GetVacationRequestById(int id)
+        public async Task<ActionResult<VacationRequest>> GetVacationRequestById(int id)
         {
-            var VacationRequest = _service.GetById(id);
+            var VacationRequest = await _service.GetByIdAsync(id);
             if (VacationRequest == null) 
                 return NotFound();
             return Ok(VacationRequest);
         }
 
         [HttpPost]
-        public ActionResult<VacationRequest> CreateVacationRequest(VacationRequestDTO dto)
+        public async Task<ActionResult<VacationRequest>> CreateVacationRequest(VacationRequestDTO dto)
         {
             if(dto == null)
                 return BadRequest();
 
             try
             {
-                var vacationRequest = _service.Create(dto);
+                var vacationRequest = await _service.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetVacationRequestById), new { id = vacationRequest.Id }, vacationRequest);
             }
             catch (ArgumentException ex)
@@ -52,13 +52,13 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<VacationRequest> ChangeVacationRequest(int id, UpdateVacationRequestDTO dto)
+        public async Task<ActionResult<VacationRequest>> ChangeVacationRequest(int id, UpdateVacationRequestDTO dto)
         {
             if (dto == null)
                 return BadRequest();
             try
             {
-                var result = _service.Update(id, dto);
+                var result = await _service.UpdateAsync(id, dto);
                 if (result == null)
                     return NotFound();
                 return Ok(result);
@@ -72,11 +72,11 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteVacationRequestById(int id)
+        public async Task<ActionResult> DeleteVacationRequestById(int id)
         {
             try
             {
-                var result = _service.Delete(id);
+                var result = await _service.DeleteAsync(id);
 
                 if (!result)
                     return NotFound();
@@ -91,11 +91,11 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpPost("{id}/approve")]
-        public ActionResult<VacationRequest> ApproveVacationRequestById(int id)
+        public async Task<ActionResult<VacationRequest>> ApproveVacationRequestById(int id)
         {
             try
             {
-                var result = _service.Approve(id);
+                var result = await _service.ApproveAsync(id);
                 if (result == null)
                     return NotFound();
 
@@ -111,11 +111,11 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpPost("{id}/reject")]
-        public ActionResult<VacationRequest> RejectVacationRequestById(int id)
+        public async Task<ActionResult<VacationRequest>> RejectVacationRequestById(int id)
         {
             try
             {
-                var result = _service.Reject(id);
+                var result = await _service.RejectAsync(id);
                 if (result == null)
                     return NotFound();
 

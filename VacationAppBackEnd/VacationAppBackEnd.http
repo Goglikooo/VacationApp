@@ -5,7 +5,7 @@ GET {{rootUrl}}/VacationRequests/
 Accept: application/json
 
 ###
-GET {{rootUrl}}/VacationRequests/1
+GET {{rootUrl}}/VacationRequests/4
 Accept: application/json
 
 ###
@@ -13,7 +13,7 @@ POST {{rootUrl}}/VacationRequests/
 Content-Type: application/json
 {
   "userId": 1,
-  "startDate": "2026-05-10",
+  "startDate": "2026-07-10",
   "endDate": "2026-07-16",
   "comment": "test vacation2"
 }

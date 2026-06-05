@@ -5,13 +5,13 @@ namespace VacationAppBackEnd.Services
 {
     public interface IVacationRequestService
     {
-        List<VacationRequest> GetAll();
-        VacationRequest? GetById(int id);
-        VacationRequest Create(VacationRequestDTO dto);
-        VacationRequest? Update(int id, UpdateVacationRequestDTO dto);
-        bool Delete(int id);
-        VacationRequest? Approve(int id);
-        VacationRequest? Reject(int id);
+        Task<List<VacationRequest>> GetAllAsync();
+        Task<VacationRequest?> GetByIdAsync(int id);
+        Task<VacationRequest> CreateAsync(VacationRequestDTO dto);
+        Task<VacationRequest?> UpdateAsync(int id, UpdateVacationRequestDTO dto);
+        Task<bool> DeleteAsync(int id);
+        Task<VacationRequest?> ApproveAsync(int id);
+        Task<VacationRequest?> RejectAsync(int id);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using VacationAppBackEnd.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using VacationAppBackEnd.Data;
 using VacationAppBackEnd.DTOs;
 using VacationAppBackEnd.Models;
 
@@ -14,10 +15,12 @@ namespace VacationAppBackEnd.Services
             _context = context;
         }
 
-        public List<VacationRequest> GetAll() => _context.VacationRequests.ToList();
-        public VacationRequest? GetById(int id) => _context.VacationRequests.FirstOrDefault(v => v.Id == id);
+        public async Task<List<VacationRequest>> GetAllAsync() 
+            => await _context.VacationRequests.ToListAsync();
+        public async Task<VacationRequest?> GetByIdAsync(int id) 
+            => await _context.VacationRequests.FirstOrDefaultAsync(v => v.Id == id);
 
-        public VacationRequest Create(VacationRequestDTO dto)
+        public async Task<VacationRequest> CreateAsync(VacationRequestDTO dto)
         {
             
             if (dto.StartDate > dto.EndDate)
@@ -35,13 +38,13 @@ namespace VacationAppBackEnd.Services
             };
 
             _context.VacationRequests.Add(newRequest);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return newRequest;
         }
 
-        public VacationRequest? Update(int id, UpdateVacationRequestDTO dto)
+        public async Task<VacationRequest?> UpdateAsync(int id, UpdateVacationRequestDTO dto)
         {
-            var existingRequest = GetById(id);
+            var existingRequest = await GetByIdAsync(id);
 
             if (existingRequest == null)
                 return null;
@@ -58,14 +61,14 @@ namespace VacationAppBackEnd.Services
             if(!string.IsNullOrWhiteSpace(dto.Comment))
                 existingRequest.Comment = dto.Comment;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return existingRequest;
 
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var existingRequest = GetById(id);
+            var existingRequest = await GetByIdAsync(id);
 
             if(existingRequest == null)
                 return false;
@@ -74,13 +77,13 @@ namespace VacationAppBackEnd.Services
                 return false;
            
             _context.VacationRequests.Remove(existingRequest);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public VacationRequest? Approve(int id)
+        public async Task<VacationRequest?> ApproveAsync(int id)
         {
-            var existingRequest = GetById(id);
+            var existingRequest = await GetByIdAsync(id);
             if(existingRequest==null || existingRequest.Status != Enums.VacationRequestStatus.Pending)
             {
                 return null;
@@ -90,13 +93,13 @@ namespace VacationAppBackEnd.Services
             existingRequest.DecisionDate = DateTime.UtcNow;
             existingRequest.ReviewedById = 1; // Simulate admin user ID
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return existingRequest;
 
         }
-        public VacationRequest? Reject(int id)
+        public async Task<VacationRequest?> RejectAsync(int id)
         {
-            var existingRequest = GetById(id);
+            var existingRequest = await GetByIdAsync(id);
             if (existingRequest == null || existingRequest.Status != Enums.VacationRequestStatus.Pending)
             {
                 return null;
@@ -107,7 +110,7 @@ namespace VacationAppBackEnd.Services
             existingRequest.ReviewedById = 1; // Simulate admin user ID
 
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return existingRequest;
 
         }
