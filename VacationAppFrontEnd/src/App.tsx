@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { getAll } from "./api/vacationRequests";
 import "./App.css";
+import Sidebar from "./components/shared/Sidebar";
+import Page from "./app/dashboard/page";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   const [requests, setRequests] = useState([]);
@@ -20,15 +23,11 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-red-200">
-      <h1>TEST</h1>
-      <p>Goga Gogeshvili</p>
-      <ul>
-        {requests.map((item) => (
-          <li key={item.id}>{item.startDate}</li>
-        ))}
-      </ul>
-    </div>
+    <TooltipProvider>
+      <div>
+        <Page />
+      </div>
+    </TooltipProvider>
   );
 }
 
