@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAll } from "./api/vacationRequests";
 import "./App.css";
 import Sidebar from "./components/shared/Sidebar";
-import Page from "./app/dashboard/page";
+import DashboardPage from "./pages/dashboard";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
   return (
     <TooltipProvider>
       <div>
-        <Page />
+        <DashboardPage />
       </div>
     </TooltipProvider>
   );
