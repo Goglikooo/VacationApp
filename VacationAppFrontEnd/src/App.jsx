@@ -20,7 +20,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-red-200">
       <h1>TEST</h1>
       <p>Goga Gogeshvili</p>
       <ul>
