@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { getAll } from "./api/vacationRequests";
 import "./App.css";
-import Sidebar from "./components/shared/Sidebar";
-import DashboardPage from "./pages/dashboard";
+import DashboardPage from "./pages/Dashboard";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AppLayout from "@/components/layout/app-layout";
 
 function App() {
   const [requests, setRequests] = useState([]);
@@ -24,9 +25,11 @@ function App() {
 
   return (
     <TooltipProvider>
-      <div>
-        <DashboardPage />
-      </div>
+      <BrowserRouter>
+        <AppLayout>
+          <DashboardPage />
+        </AppLayout>
+      </BrowserRouter>
     </TooltipProvider>
   );
 }
