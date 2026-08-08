@@ -10,44 +10,35 @@ import { TrendingUpIcon } from "lucide-react";
 
 export function SectionCards() {
   return (
-    <div className="grid grid-cols-3 gap-4 px-0 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs  @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            26
-          </CardTitle>
-          <CardDescription>Total Employees</CardDescription>
-          <CardAction>
+    <div className="grid grid-cols-3 gap-4 items-stretch">
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex h-full flex-col justify-between">
+          <div className="flex  items-center justify-between gap-2">
+            <CardTitle className="text-xl font-semibold">26</CardTitle>
             <Badge variant="outline">100%</Badge>
-          </CardAction>
+          </div>
+          <CardDescription className="mt-auto">Total Employees</CardDescription>
         </CardHeader>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            5
-          </CardTitle>
-          <CardDescription>Away Today</CardDescription>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon />
-              19%
-            </Badge>
-          </CardAction>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-xl font-semibold">5</CardTitle>
+            <Badge variant="outline">19%</Badge>
+          </div>
+
+          <CardDescription className="mt-auto">Away Today</CardDescription>
         </CardHeader>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            12
-          </CardTitle>
-          <CardDescription>Pending Approvals</CardDescription>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon />
-              15%
-            </Badge>
-          </CardAction>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-xl font-semibold">12</CardTitle>
+            <Badge variant="outline">15%</Badge>
+          </div>
+          <CardDescription className="mt-auto">
+            Pending Approvals
+          </CardDescription>
         </CardHeader>
       </Card>
     </div>
