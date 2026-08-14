@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import AwayThisDayComponent from "@/components/Away-this-Day/AwayThisDayComponent";
+import PendingApprovals from "@/components/Pending-Approvals/PendingApprovals";
 
 export default function DashboardPage() {
   const [open, setOpen] = useState(false);
@@ -57,6 +58,9 @@ export default function DashboardPage() {
           </div>
           <div className=" flex-1 ">
             <AwayThisDayComponent />
+          </div>
+          <div>
+            <PendingApprovals />
           </div>
         </div>
       </div>
