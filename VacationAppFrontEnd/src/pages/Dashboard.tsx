@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
+import AwayThisDayComponent from "@/components/Away-this-Day/AwayThisDayComponent";
 
 export default function DashboardPage() {
   const [open, setOpen] = useState(false);
@@ -19,7 +20,7 @@ export default function DashboardPage() {
         Hello Goga!
       </div>
       <div className=" ">
-        <div className=" bg-red-100 flex flex-col gap-4">
+        <div className="  flex flex-col gap-4">
           <SectionCards />
           <div className="flex gap-10">
             {/* // TEST  */}
@@ -54,8 +55,8 @@ export default function DashboardPage() {
             </Field>
             {/* // TEST  */}
           </div>
-          <div className=" flex-1">
-            aq iqneba is ragaceebi rac kalendarshi archeul dgeebze xdeba
+          <div className=" flex-1 ">
+            <AwayThisDayComponent />
           </div>
         </div>
       </div>
