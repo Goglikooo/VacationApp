@@ -17,39 +17,51 @@ export default function PendingApprovalItem({
   dateRange,
   vacationType,
 }: PendingApprovalItemProps) {
+  const statusClass =
+    vacationType.toLowerCase() === "vacation"
+      ? "bg-vacation-bg text-vacation"
+      : vacationType.toLowerCase() === "sick"
+        ? "bg-sick-bg text-sick"
+        : "bg-personal-bg text-personal";
+
   return (
-    <div
-      id="list item"
-      className="bg-blue-500 text-white p-2 rounded-md flex justify-between items-center"
-    >
-      <div className="flex gap-2 items-center">
-        <div className="bg-rose-200 text-gray-800 p-3 rounded-2xl text-md">
+    <div className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border border-l-4 border-l-pending bg-card p-3 text-card-foreground transition-colors hover:bg-muted/50">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-pending-bg text-sm font-semibold text-pending">
           {initials}
         </div>
 
-        <div>
-          <div className="font-semibold">{name}</div>
-          <div className="text-xs ">{dateRange}</div>
+        <div className="min-w-0 flex-1">
+          <div className="break-words text-sm font-medium leading-tight">
+            {name}
+          </div>
+          <div className="truncate text-xs text-muted-foreground">
+            {dateRange}
+          </div>
         </div>
       </div>
-      <div className="bg-violet-400 text-white px-3 py-1 rounded-md text-sm">
+      <div
+        className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${statusClass}`}
+      >
         {vacationType}
       </div>
 
-      <div className="flex gap-1 items-center">
-        <button className=" ">
-          <FontAwesomeIcon
-            icon={faSquareMinus}
-            size="2xl"
-            className="text-red-500"
-          />
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          aria-label={`Reject ${name}'s request`}
+          title="Reject request"
+          className="rounded-md p-1 text-destructive transition-colors hover:bg-sick-bg"
+        >
+          <FontAwesomeIcon icon={faSquareMinus} className="text-lg" />
         </button>
-        <button className="">
-          <FontAwesomeIcon
-            icon={faSquareCheck}
-            size="2xl"
-            className="text-green-500"
-          />
+        <button
+          type="button"
+          aria-label={`Approve ${name}'s request`}
+          title="Approve request"
+          className="rounded-md p-1 text-success transition-colors hover:bg-success-bg"
+        >
+          <FontAwesomeIcon icon={faSquareCheck} className="text-lg" />
         </button>
       </div>
     </div>

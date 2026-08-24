@@ -22,12 +22,15 @@ export default function WeekView({
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   return (
-    <div className="p-1">
-      <div className=" flex items-center justify-between ">
-        <div className="flex ">
+    <section className="flex flex-col gap-3 rounded-lg border border-vacation/30 bg-vacation-bg/30 p-3 text-card-foreground shadow-sm">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Previous week"
+            title="Previous week"
+            className="text-vacation hover:bg-vacation-bg hover:text-vacation"
             onClick={() => setWeekView(addDays(weekView, -7))}
           >
             <ChevronLeft className="size-4" />
@@ -35,6 +38,9 @@ export default function WeekView({
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Next week"
+            title="Next week"
+            className="text-vacation hover:bg-vacation-bg hover:text-vacation"
             onClick={() => setWeekView(addDays(weekView, 7))}
           >
             <ChevronRight className="size-4" />
@@ -46,7 +52,7 @@ export default function WeekView({
               <Button
                 variant="outline"
                 id="date"
-                className="justify-start font-normal"
+                className="justify-start border-vacation/40 bg-background font-normal hover:bg-vacation-bg hover:text-vacation"
               >
                 {selectedDate
                   ? selectedDate.toLocaleDateString()
@@ -76,7 +82,11 @@ export default function WeekView({
         </div>
         <Button
           variant={isSameDay(selectedDate, new Date()) ? "default" : "ghost"}
-          className="text-md  px-3"
+          className={`px-3 text-sm ${
+            isSameDay(selectedDate, new Date())
+              ? "text-primary-foreground hover:bg-primary/80"
+              : "text-vacation hover:bg-vacation-bg hover:text-vacation"
+          }`}
           onClick={() => {
             setSelectedDate(new Date());
             setWeekView(new Date());
@@ -85,19 +95,24 @@ export default function WeekView({
           Today
         </Button>
       </div>
-      <div className="grid grid-cols-7 gap-2 mt-3">
+      <div className="grid grid-cols-7 gap-1.5 border-t border-vacation/20 pt-3">
         {days.map((day) => (
           <Button
             key={day.toISOString()}
             variant={isSameDay(day, selectedDate) ? "default" : "ghost"}
             onClick={() => setSelectedDate(day)}
-            className="flex flex-col h-auto py-2 gap-0.5"
+            aria-label={format(day, "EEEE, MMMM d, yyyy")}
+            className={`flex h-auto min-w-0 flex-col gap-0.5 rounded-md border py-2 ${
+              isSameDay(day, selectedDate)
+                ? "border-vacation bg-vacation text-primary-foreground shadow-sm"
+                : "border-border bg-background text-foreground hover:border-vacation/50 hover:bg-vacation-bg hover:text-vacation"
+            }`}
           >
             <span className="text-xs opacity-70">{format(day, "EEE")}</span>
             <span className="text-sm font-medium">{format(day, "d")}</span>
           </Button>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

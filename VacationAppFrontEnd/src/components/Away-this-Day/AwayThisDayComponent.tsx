@@ -1,88 +1,80 @@
+const awayPeople = [
+  {
+    initials: "JD",
+    name: "John Doe",
+    role: "Marketing",
+    back: "Mon, Aug 15",
+    status: "vacation",
+    statusClass: "bg-vacation-bg text-vacation",
+  },
+  {
+    initials: "JD",
+    name: "Jane Doe",
+    role: "Marketing",
+    back: "Mon, Aug 15",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "SC",
+    name: "Sarah Connor",
+    role: "DevOps Engineer",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+] as const;
+
 export default function AwayThisDayComponent() {
   return (
-    <div className="flex flex-col gap-2 p-2 border rounded-md">
+    <section className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4 text-card-foreground shadow-sm">
       <div className="flex justify-between items-center">
-        <h3>Away This Day</h3>
-        <span>4 People</span>
+        <div>
+          <h3 className="text-base font-semibold">Away This Day</h3>
+          <p className="text-sm text-muted-foreground">People currently away</p>
+        </div>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+          {awayPeople.length} People
+        </span>
       </div>
-      <div className="flex flex-col gap-2">
-        <div
-          id="list item"
-          className="bg-blue-500 text-white p-2 rounded-md flex justify-between items-center"
-        >
-          <div className="flex gap-2 items-center">
-            <div className="bg-yellow-200 text-gray-800 p-3 rounded-2xl text-md">
-              JD
-            </div>
-
-            <div>
-              <div className="font-semibold">John Doe</div>
-              <div className="text-xs text-gray-300">
-                Marketing · Back Mon, Aug 15
+      <div className="grid gap-2 grid-cols-1">
+        {awayPeople.map((person) => (
+          <div
+            key={`${person.name}-${person.status}`}
+            className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-background p-3 transition-colors hover:bg-muted/50"
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <div
+                className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${person.statusClass}`}
+                aria-hidden="true"
+              >
+                {person.initials}
+              </div>
+              <div className="min-w-0">
+                <div className="truncate text-sm font-medium">
+                  {person.name}
+                </div>
+                <div className="truncate text-xs text-muted-foreground">
+                  {person.role} · Back {person.back}
+                </div>
               </div>
             </div>
+            <span
+              className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${person.statusClass}`}
+            >
+              {person.status}
+            </span>
           </div>
-          <div className="bg-blue-400 text-white px-3 py-1 rounded-md">
-            vacation
-          </div>
-        </div>
-        <div
-          id="list item"
-          className="bg-blue-500 text-white p-2 rounded-md flex justify-between items-center"
-        >
-          <div className="flex gap-2 items-center">
-            <div className="bg-green-200 text-gray-800 p-3 rounded-2xl text-md">
-              JD
-            </div>
-
-            <div>
-              <div className="font-semibold">Jane Doe</div>
-              <div className="text-xs text-gray-300">
-                Marketing · Back Mon, Aug 15
-              </div>
-            </div>
-          </div>
-          <div className="bg-red-400 text-white px-3 py-1 rounded-md">sick</div>
-        </div>
-        <div
-          id="list item"
-          className="bg-blue-500 text-white p-2 rounded-md flex justify-between items-center"
-        >
-          <div className="flex gap-2 items-center">
-            <div className="bg-indigo-200 text-gray-800 p-3 rounded-2xl text-md">
-              GG
-            </div>
-
-            <div>
-              <div className="font-semibold">Goga Gogeshvili</div>
-              <div className="text-xs text-gray-300">
-                Engineering · Back Tue, Feb 16
-              </div>
-            </div>
-          </div>
-          <div className="bg-violet-400 text-white px-3 py-1 rounded-md">
-            personal
-          </div>
-        </div>
-        <div
-          id="list item"
-          className="bg-blue-500 text-white p-2 rounded-md flex justify-between items-center"
-        >
-          <div className="flex gap-2 items-center">
-            <div className="bg-rose-200 text-gray-800 p-3 rounded-2xl text-md">
-              SC
-            </div>
-
-            <div>
-              <div className="font-semibold">Sarah Connor</div>
-              <div className="text-xs text-gray-300">
-                DevOps Engineer · Back Fri, Jul 1
-              </div>
-            </div>
-          </div>
-          <div className="bg-red-400 text-white px-3 py-1 rounded-md">sick</div>
-        </div>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
