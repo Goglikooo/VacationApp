@@ -31,11 +31,70 @@ const awayPeople = [
     status: "sick",
     statusClass: "bg-sick-bg text-sick",
   },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
+  {
+    initials: "LB",
+    name: "Lukas Brachvogel",
+    role: "Office Psychiatrist",
+    back: "Fri, Jul 1",
+    status: "sick",
+    statusClass: "bg-sick-bg text-sick",
+  },
 ] as const;
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function AwayThisDayComponent() {
+  const isMobile = useIsMobile();
+
   return (
-    <section className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4 text-card-foreground shadow-sm">
+    <section className="flex max-h-100 2xl:max-h-125 flex-col gap-4 rounded-lg border border-border border-l-4 border-l-personal bg-card p-4 text-card-foreground shadow-sm">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-base font-semibold">Away This Day</h3>
@@ -45,19 +104,21 @@ export default function AwayThisDayComponent() {
           {awayPeople.length} People
         </span>
       </div>
-      <div className="grid gap-2 grid-cols-1">
+      <div className="grid gap-2 grid-cols-1 overflow-y-scroll custom-scrollbar">
         {awayPeople.map((person) => (
           <div
             key={`${person.name}-${person.status}`}
             className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-background p-3 transition-colors hover:bg-muted/50"
           >
             <div className="flex min-w-0 items-center gap-3">
-              <div
-                className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${person.statusClass}`}
-                aria-hidden="true"
-              >
-                {person.initials}
-              </div>
+              {!isMobile && (
+                <div
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${person.statusClass}`}
+                  aria-hidden="true"
+                >
+                  {person.initials}
+                </div>
+              )}
               <div className="min-w-0">
                 <div className="truncate text-sm font-medium">
                   {person.name}

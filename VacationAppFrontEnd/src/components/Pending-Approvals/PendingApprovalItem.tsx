@@ -3,6 +3,7 @@ import {
   faSquareCheck,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PendingApprovalItemProps {
   initials: string;
@@ -25,9 +26,9 @@ export default function PendingApprovalItem({
         : "bg-personal-bg text-personal";
 
   return (
-    <div className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border border-l-4 border-l-pending bg-card p-3 text-card-foreground transition-colors hover:bg-muted/50">
+    <div className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-card p-3 text-card-foreground transition-colors hover:bg-muted/50">
       <div className="flex min-w-0 flex-1 items-center gap-2">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-pending-bg text-sm font-semibold text-pending">
+        <div className=" flex size-9 shrink-0 items-center justify-center rounded-full bg-pending-bg text-sm font-semibold text-pending xl:hidden 2xl:flex">
           {initials}
         </div>
 

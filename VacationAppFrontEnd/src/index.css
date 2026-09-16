@@ -171,3 +171,8 @@
     @apply font-sans;
   }
 }
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: none;
+  }
+}
