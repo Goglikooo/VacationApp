@@ -22,7 +22,7 @@ export default function DashboardPage() {
             </div>
             <div className="hidden xl:row-span-2 xl:flex xl:row-span-1">
               <Calendar
-                className="max-h-165  w-full rounded-lg border border-vacation/30 border-l-4 border-l-vacation bg-vacation-bg/30 [--cell-size:--spacing(9)]"
+                className="max-h-125  w-full rounded-lg border border-vacation/30 border-l-4 border-l-vacation bg-vacation-bg/30 [--cell-size:--spacing(9)]"
                 mode="single"
                 selected={selectedDate}
                 defaultMonth={selectedDate}
