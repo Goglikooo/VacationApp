@@ -3,7 +3,6 @@ import {
   faSquareCheck,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PendingApprovalItemProps {
   initials: string;
