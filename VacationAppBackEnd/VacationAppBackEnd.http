@@ -34,9 +34,13 @@ DELETE {{rootUrl}}/VacationRequests/4
 Content-Type: application/json
 
 ###
-POST {{rootUrl}}/VacationRequests/1/approve
+POST {{rootUrl}}/VacationRequests/6/approve
 Content-Type: application/json
 
 ###
-POST {{rootUrl}}/VacationRequests/2/reject
+POST {{rootUrl}}/VacationRequests/7/reject
 Content-Type: application/json
+
+###
+GET {{rootUrl}}/VacationRequests/pending
+Accept: application/json

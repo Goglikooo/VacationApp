@@ -23,7 +23,7 @@ namespace VacationAppBackEnd.Controllers
             return Ok(await _service.GetAllAsync());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<VacationRequest>> GetVacationRequestById(int id)
         {
             var VacationRequest = await _service.GetByIdAsync(id);
@@ -32,8 +32,14 @@ namespace VacationAppBackEnd.Controllers
             return Ok(VacationRequest);
         }
 
+        [HttpGet("pending")]
+        public async Task<ActionResult<List<VacationRequestResponseDTO>>> GetPendingVacations()
+        {
+            return Ok(await _service.GetPendingVacationsAsync());
+        }
+
         [HttpPost]
-        public async Task<ActionResult<VacationRequest>> CreateVacationRequest(VacationRequestDTO dto)
+        public async Task<ActionResult<VacationRequestResponseDTO>> CreateVacationRequest(VacationRequestCreateDTO dto)
         {
             if(dto == null)
                 return BadRequest();

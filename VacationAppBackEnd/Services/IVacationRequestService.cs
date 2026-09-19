@@ -7,11 +7,12 @@ namespace VacationAppBackEnd.Services
     {
         Task<List<VacationRequest>> GetAllAsync();
         Task<VacationRequest?> GetByIdAsync(int id);
-        Task<VacationRequest> CreateAsync(VacationRequestDTO dto);
+        Task<VacationRequestResponseDTO> CreateAsync(VacationRequestCreateDTO dto);
         Task<VacationRequest?> UpdateAsync(int id, UpdateVacationRequestDTO dto);
         Task<bool> DeleteAsync(int id);
         Task<VacationRequest?> ApproveAsync(int id);
         Task<VacationRequest?> RejectAsync(int id);
+        Task<List<VacationRequestResponseDTO>> GetPendingVacationsAsync();
 
     }
 }

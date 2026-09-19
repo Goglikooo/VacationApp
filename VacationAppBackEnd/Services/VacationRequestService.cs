@@ -15,21 +15,48 @@ namespace VacationAppBackEnd.Services
             _context = context;
         }
 
-        public async Task<List<VacationRequest>> GetAllAsync() 
-            => await _context.VacationRequests.ToListAsync();
-        public async Task<VacationRequest?> GetByIdAsync(int id) 
-            => await _context.VacationRequests.FirstOrDefaultAsync(v => v.Id == id);
+        public async Task<List<VacationRequest>> GetAllAsync() =>
+            await _context.VacationRequests.ToListAsync();
 
-        public async Task<VacationRequest> CreateAsync(VacationRequestDTO dto)
+        public async Task<VacationRequest?> GetByIdAsync(int id) =>
+            await _context.VacationRequests.FirstOrDefaultAsync(item => item.Id == id);
+
+        public async Task<List<VacationRequestResponseDTO>> GetPendingVacationsAsync() =>         
+            await _context.VacationRequests
+                 .Where(v => v.Status == Enums.VacationRequestStatus.Pending)
+                 .Select(v => new VacationRequestResponseDTO
+                 {
+                     Id = v.Id,
+                     StartDate = v.StartDate,
+                     EndDate = v.EndDate,
+                     Status = v.Status,
+                     Comment = v.Comment,
+                     CreatedAt = v.CreatedAt,
+                     RequestedBy = new UserResponseDTO
+                     {
+                         Id = v.RequestedBy.Id,
+                         FullName = v.RequestedBy.FirstName + " " + v.RequestedBy.LastName,
+                         Email = v.RequestedBy.Email
+                     }
+                 })
+                 .ToListAsync();
+        
+
+        public async Task<VacationRequestResponseDTO> CreateAsync(VacationRequestCreateDTO dto)
         {
             
             if (dto.StartDate > dto.EndDate)
                 throw new ArgumentException("Start date cannot be after end date.");
 
+            var user = await _context.Users.FindAsync(dto.UserId);
+
+            if (user == null) throw new Exception("User not found.");
+
             var newRequest = new VacationRequest
             {
                 
                 UserId = dto.UserId,
+                RequestedBy = user,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 Comment = dto.Comment,
@@ -39,7 +66,24 @@ namespace VacationAppBackEnd.Services
 
             _context.VacationRequests.Add(newRequest);
             await _context.SaveChangesAsync();
-            return newRequest;
+
+            var newRequestResponse = new VacationRequestResponseDTO
+            {
+                Id = newRequest.Id,
+                RequestedBy = new UserResponseDTO
+                {
+                    Id = newRequest.RequestedBy.Id,
+                    FullName = newRequest.RequestedBy.FirstName + newRequest.RequestedBy.LastName,
+                    Email = newRequest.RequestedBy.Email,
+                },
+                StartDate = newRequest.StartDate,
+                EndDate = newRequest.EndDate,
+                Status = newRequest.Status,
+                Comment = newRequest.Comment,
+                CreatedAt = newRequest.CreatedAt,
+            };
+
+            return newRequestResponse;
         }
 
         public async Task<VacationRequest?> UpdateAsync(int id, UpdateVacationRequestDTO dto)
