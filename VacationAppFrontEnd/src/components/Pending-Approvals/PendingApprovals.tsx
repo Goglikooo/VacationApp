@@ -3,9 +3,21 @@ import PendingApprovalItem from "./PendingApprovalItem";
 
 import { useRef, useState, useEffect } from "react";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
+import { getPendingVacations } from "./../../api/vacationRequests";
 export default function PendingApprovals() {
   const listRef = useRef<HTMLDivElement>(null);
   const [needsScroll, setNeedsScroll] = useState(false);
+
+  const [pendingVacations, setPendingVacations] = useState<VacationRequest[]>(
+    [],
+  );
+
+  useEffect(() => {
+    getPendingVacations().then((res) => {
+      console.log(res.data);
+      setPendingVacations(res.data);
+    });
+  }, []);
 
   const checkScroll = () => {
     const list = listRef.current;
@@ -48,54 +60,17 @@ export default function PendingApprovals() {
         onScroll={checkScroll}
         className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar"
       >
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />{" "}
-        <PendingApprovalItem
-          initials="LB"
-          name="Lukas Brachvogel"
-          dateRange="Aug 15 - Aug 22"
-          vacationType="Vacation"
-        />
+        {pendingVacations.map((item) => {
+          return (
+            <PendingApprovalItem
+              key={item.id}
+              initials="GG"
+              name={item.requestedBy.fullName}
+              dateRange="Aug 15 - Aug 22"
+              vacationType="Vacation"
+            />
+          );
+        })}
       </div>
       <div className="absolute inset-x-0 bottom-2 flex justify-center animate-bounce">
         {needsScroll ? <FontAwesomeIcon icon={faAnglesDown} /> : ""}
