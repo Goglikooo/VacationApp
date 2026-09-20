@@ -5,30 +5,42 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 interface PendingApprovalItemProps {
-  initials: string;
   name: string;
-  dateRange: string;
-  vacationType: string;
+  startDate: string;
+  endDate: string;
+  type: string;
 }
 
 export default function PendingApprovalItem({
-  initials,
   name,
-  dateRange,
-  vacationType,
+  startDate,
+  endDate,
+  type,
 }: PendingApprovalItemProps) {
   const statusClass =
-    vacationType.toLowerCase() === "vacation"
+    type.toLowerCase() === "vacation"
       ? "bg-vacation-bg text-vacation"
-      : vacationType.toLowerCase() === "sick"
+      : type.toLowerCase() === "sick"
         ? "bg-sick-bg text-sick"
         : "bg-personal-bg text-personal";
+
+  const formattedDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+
+  const getInitialsFromName = (fullName: string) => {
+    const NamesArray = fullName.split(" ");
+    const result = NamesArray[0][0] + NamesArray[1][0];
+    return result;
+  };
 
   return (
     <div className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-card p-3 text-card-foreground transition-colors hover:bg-muted/50">
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <div className=" flex size-9 shrink-0 items-center justify-center rounded-full bg-pending-bg text-sm font-semibold text-pending xl:hidden 2xl:flex">
-          {initials}
+          {getInitialsFromName(name)}
         </div>
 
         <div className="min-w-0 flex-1">
@@ -36,14 +48,14 @@ export default function PendingApprovalItem({
             {name}
           </div>
           <div className="truncate text-xs text-muted-foreground">
-            {dateRange}
+            {formattedDate(startDate)} - {formattedDate(endDate)}
           </div>
         </div>
       </div>
       <div
         className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${statusClass}`}
       >
-        {vacationType}
+        {type}
       </div>
 
       <div className="flex shrink-0 items-center gap-1">

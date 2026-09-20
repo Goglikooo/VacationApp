@@ -4,7 +4,12 @@ import PendingApprovalItem from "./PendingApprovalItem";
 import { useRef, useState, useEffect } from "react";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 import { getPendingVacations } from "./../../api/vacationRequests";
-export default function PendingApprovals() {
+
+interface PendingApprovalsProps {
+  boxHeight: number;
+}
+
+export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const [needsScroll, setNeedsScroll] = useState(false);
 
@@ -14,7 +19,6 @@ export default function PendingApprovals() {
 
   useEffect(() => {
     getPendingVacations().then((res) => {
-      console.log(res.data);
       setPendingVacations(res.data);
     });
   }, []);
@@ -43,7 +47,10 @@ export default function PendingApprovals() {
   }, []);
 
   return (
-    <section className="relative flex max-h-100  2xl:max-h-125  flex-col gap-4 rounded-lg bg-pending-bg/30 p-4 text-card-foreground shadow-sm border border-pending/30 border-l-4 border-l-pending">
+    <section
+      style={{ height: `${boxHeight}px` }}
+      className="relative  flex  flex-col gap-4 rounded-lg bg-pending-bg/30 p-4 text-card-foreground shadow-sm border border-pending/30 border-l-4 border-l-pending"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-semibold">Pending Approvals</h3>
@@ -58,16 +65,16 @@ export default function PendingApprovals() {
       <div
         ref={listRef}
         onScroll={checkScroll}
-        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar"
+        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar "
       >
         {pendingVacations.map((item) => {
           return (
             <PendingApprovalItem
               key={item.id}
-              initials="GG"
               name={item.requestedBy.fullName}
-              dateRange="Aug 15 - Aug 22"
-              vacationType="Vacation"
+              startDate={item.startDate}
+              endDate={item.endDate}
+              type={item.type}
             />
           );
         })}

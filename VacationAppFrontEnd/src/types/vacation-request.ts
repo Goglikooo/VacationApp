@@ -5,8 +5,9 @@ interface VacationRequest {
     fullName: string;
     id: number;
   };
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
+  type: string;
   status: string;
   comment?: string;
   createdAt: Date;

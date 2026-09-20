@@ -24,20 +24,108 @@ const awayPeople = [
     statusClass: "bg-personal-bg text-personal",
   },
   {
-    initials: "SC",
-    name: "Sarah Connor",
-    role: "DevOps Engineer",
-    back: "Fri, Jul 1",
-    status: "sick",
-    statusClass: "bg-sick-bg text-sick",
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
   },
   {
-    initials: "LB",
-    name: "Lukas Brachvogel",
-    role: "Office Psychiatrist",
-    back: "Fri, Jul 1",
-    status: "sick",
-    statusClass: "bg-sick-bg text-sick",
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
+  },
+  {
+    initials: "GG",
+    name: "Goga Gogeshvili",
+    role: "Engineering",
+    back: "Tue, Feb 16",
+    status: "personal",
+    statusClass: "bg-personal-bg text-personal",
   },
 ] as const;
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -45,7 +133,13 @@ import { useEffect, useState, useRef } from "react";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function AwayThisDayComponent() {
+interface AwayThisDayComponentProps {
+  boxHeight: number;
+}
+
+export default function AwayThisDayComponent({
+  boxHeight,
+}: AwayThisDayComponentProps) {
   const isMobile = useIsMobile();
 
   const listRef = useRef<HTMLDivElement>(null);
@@ -77,7 +171,10 @@ export default function AwayThisDayComponent() {
   }, []);
 
   return (
-    <section className="relative flex max-h-100 2xl:max-h-125 flex-col gap-4 rounded-lg border border-border border-l-4 border-l-personal bg-card p-4 text-card-foreground shadow-sm">
+    <section
+      style={{ height: `${boxHeight}px` }}
+      className="relative flex min-h-0 flex-col gap-4 rounded-lg border border-border border-l-4 border-l-personal bg-card p-4 text-card-foreground shadow-sm"
+    >
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-base font-semibold">Away This Day</h3>
@@ -90,7 +187,7 @@ export default function AwayThisDayComponent() {
       <div
         ref={listRef}
         onScroll={scrollCheck}
-        className="grid gap-2 grid-cols-1 overflow-y-scroll custom-scrollbar"
+        className="grid min-h-0 flex-1 grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar"
       >
         {awayPeople.map((person) => (
           <div
