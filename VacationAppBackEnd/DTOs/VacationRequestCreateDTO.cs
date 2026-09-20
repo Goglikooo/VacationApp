@@ -1,10 +1,13 @@
-﻿namespace VacationAppBackEnd.DTOs
+﻿using VacationAppBackEnd.Enums;
+
+namespace VacationAppBackEnd.DTOs
 {
     public class VacationRequestCreateDTO
     {
         public int UserId { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
+        public VacationType Type { get; set; }
         public string? Comment { get; set; }
 
     }

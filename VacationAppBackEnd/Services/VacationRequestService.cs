@@ -29,6 +29,7 @@ namespace VacationAppBackEnd.Services
                      Id = v.Id,
                      StartDate = v.StartDate,
                      EndDate = v.EndDate,
+                     Type = v.Type,
                      Status = v.Status,
                      Comment = v.Comment,
                      CreatedAt = v.CreatedAt,
@@ -59,6 +60,7 @@ namespace VacationAppBackEnd.Services
                 RequestedBy = user,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
+                Type = dto.Type,
                 Comment = dto.Comment,
                 Status = Enums.VacationRequestStatus.Pending,
                 CreatedAt = DateTime.UtcNow
@@ -78,6 +80,7 @@ namespace VacationAppBackEnd.Services
                 },
                 StartDate = newRequest.StartDate,
                 EndDate = newRequest.EndDate,
+                Type = newRequest.Type,
                 Status = newRequest.Status,
                 Comment = newRequest.Comment,
                 CreatedAt = newRequest.CreatedAt,
