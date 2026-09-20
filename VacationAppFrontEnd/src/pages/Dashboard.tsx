@@ -16,7 +16,6 @@ export default function DashboardPage() {
     const observer = new ResizeObserver(([entries]) => {
       const height = entries.contentRect.height;
       setBoxHeight(height < 200 ? 350 : height);
-      console.log(height);
     });
 
     observer.observe(element);
