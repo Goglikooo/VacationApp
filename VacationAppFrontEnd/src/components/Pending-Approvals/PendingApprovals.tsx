@@ -68,7 +68,7 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
       <div
         ref={listRef}
         onScroll={checkScroll}
-        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar flex-1"
+        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar "
       >
         {pendingVacations.map((item) => {
           return (

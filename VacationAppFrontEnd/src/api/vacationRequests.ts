@@ -11,3 +11,5 @@ export const approve = (id: number) =>
 export const reject = (id: number) =>
   api.post(`/VacationRequests/${id}/reject`);
 export const getPendingVacations = () => api.get("/VacationRequests/pending");
+export const getAbsenceList = (date: string) =>
+  api.get(`/absences?date=${date}`);
