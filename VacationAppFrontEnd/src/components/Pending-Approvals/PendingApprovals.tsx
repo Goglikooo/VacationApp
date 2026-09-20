@@ -4,6 +4,7 @@ import PendingApprovalItem from "./PendingApprovalItem";
 import { useRef, useState, useEffect } from "react";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 import { getPendingVacations } from "./../../api/vacationRequests";
+import { Spinner } from "../ui/spinner";
 
 interface PendingApprovalsProps {
   boxHeight: number;
@@ -12,13 +13,14 @@ interface PendingApprovalsProps {
 export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const [needsScroll, setNeedsScroll] = useState(false);
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [pendingVacations, setPendingVacations] = useState<VacationRequest[]>(
     [],
   );
 
   useEffect(() => {
     getPendingVacations().then((res) => {
+      if (res) setLoading(false);
       setPendingVacations(res.data);
     });
   }, []);
@@ -62,10 +64,11 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
           6 Requests
         </span>
       </div>
+      {loading && <Spinner className="size-8 absolute top-50 left-50" />}
       <div
         ref={listRef}
         onScroll={checkScroll}
-        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar "
+        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar flex-1"
       >
         {pendingVacations.map((item) => {
           return (
