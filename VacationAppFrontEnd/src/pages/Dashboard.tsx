@@ -5,8 +5,10 @@ import WeekView from "@/components/Week-view/WeekView";
 import UserOverview from "@/components/User-Overview/UserOverview";
 import { useState, useRef, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
   const [boxHeight, setBoxHeight] = useState<number>(300);
   const calendarContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,13 +46,25 @@ export default function DashboardPage() {
                   w-full rounded-lg border border-vacation/30 border-l-4 border-l-vacation bg-vacation-bg/30"
                 mode="single"
                 selected={selectedDate}
-                defaultMonth={selectedDate}
+                month={calendarMonth}
+                onMonthChange={setCalendarMonth}
                 captionLayout="dropdown"
                 onSelect={(date) => {
                   if (date) {
                     setSelectedDate(date);
                   }
                 }}
+                footer={
+                  <Button
+                    onClick={() => {
+                      const today = new Date();
+                      setSelectedDate(today);
+                      setCalendarMonth(today);
+                    }}
+                  >
+                    Today
+                  </Button>
+                }
                 endMonth={new Date(2055, 11, 31)}
               />
             </div>
