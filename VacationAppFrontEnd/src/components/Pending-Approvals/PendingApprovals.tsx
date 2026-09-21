@@ -61,7 +61,8 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
           </p>
         </div>
         <span className="rounded-full bg-pending-bg px-2.5 py-1 text-xs font-medium text-pending">
-          6 Requests
+          {pendingVacations.length}{" "}
+          {pendingVacations.length > 1 ? "Requests" : "Request"}
         </span>
       </div>
       {loading && <Spinner className="size-8 absolute top-50 left-50" />}

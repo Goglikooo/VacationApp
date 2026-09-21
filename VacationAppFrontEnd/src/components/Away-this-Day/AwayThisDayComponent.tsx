@@ -31,25 +31,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface AwayThisDayComponentProps {
   boxHeight: number;
+  selectedDate: Date;
 }
 
 import { getAbsenceList } from "../../api/vacationRequests";
 
 export default function AwayThisDayComponent({
   boxHeight,
+  selectedDate,
 }: AwayThisDayComponentProps) {
   const isMobile = useIsMobile();
   const listRef = useRef<HTMLDivElement>(null);
   const [needsScroll, setNeedsScroll] = useState(false);
 
   const [absenceList, setAbsenceList] = useState<AbsenceDTO[]>([]);
-
+  const formattedSelectedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
   useEffect(() => {
-    getAbsenceList("2026-07-11").then((res) => {
+    getAbsenceList(`${formattedSelectedDate}`).then((res) => {
       setAbsenceList(res.data);
-      console.log(res.data);
     });
-  }, []);
+  }, [formattedSelectedDate]);
 
   const scrollCheck = () => {
     const list = listRef.current;
@@ -86,8 +87,8 @@ export default function AwayThisDayComponent({
           <h3 className="text-base font-semibold">Away This Day</h3>
           <p className="text-sm text-muted-foreground">People currently away</p>
         </div>
-        <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-          {absenceList.length} People
+        <span className="rounded-full bg-personal-bg px-2.5 py-1 text-xs font-medium text-personal">
+          {absenceList.length} {absenceList.length > 1 ? "People" : "Person"}
         </span>
       </div>
       <div

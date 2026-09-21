@@ -54,7 +54,10 @@ export default function DashboardPage() {
                 endMonth={new Date(2055, 11, 31)}
               />
             </div>
-            <AwayThisDayComponent boxHeight={boxHeight} />
+            <AwayThisDayComponent
+              boxHeight={boxHeight}
+              selectedDate={selectedDate}
+            />
             <PendingApprovals boxHeight={boxHeight} />
           </div>
           <UserOverview />
