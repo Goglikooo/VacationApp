@@ -26,15 +26,15 @@ const awayPeople = [
 ] as const;
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState, useRef } from "react";
-import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesDown, faPeopleRoof } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { getAbsenceList } from "../../api/vacationRequests";
+import { NoDataComponent } from "../ui/NoDataComponent";
+import { Spinner } from "../ui/spinner";
 interface AwayThisDayComponentProps {
   boxHeight: number;
   selectedDate: Date;
 }
-
-import { getAbsenceList } from "../../api/vacationRequests";
 
 export default function AwayThisDayComponent({
   boxHeight,
@@ -42,14 +42,22 @@ export default function AwayThisDayComponent({
 }: AwayThisDayComponentProps) {
   const isMobile = useIsMobile();
   const listRef = useRef<HTMLDivElement>(null);
-  const [needsScroll, setNeedsScroll] = useState(false);
-
+  const [needsScroll, setNeedsScroll] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [absenceList, setAbsenceList] = useState<AbsenceDTO[]>([]);
   const formattedSelectedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
   useEffect(() => {
-    getAbsenceList(`${formattedSelectedDate}`).then((res) => {
-      setAbsenceList(res.data);
-    });
+    setIsLoading(true);
+    getAbsenceList(`${formattedSelectedDate}`)
+      .then((res) => {
+        setAbsenceList(res.data);
+      })
+      .catch(() => {
+        setAbsenceList([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [formattedSelectedDate]);
 
   const scrollCheck = () => {
@@ -91,43 +99,54 @@ export default function AwayThisDayComponent({
           {absenceList.length} {absenceList.length > 1 ? "People" : "Person"}
         </span>
       </div>
-      <div
-        ref={listRef}
-        onScroll={scrollCheck}
-        className="grid min-h-0  grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar"
-      >
-        {absenceList.map((person) => (
-          <div
-            key={`${person.fullName}-${person.type}`}
-            className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-background p-3 transition-colors hover:bg-muted/50"
-          >
-            <div className="flex min-w-0 items-center gap-3">
-              {!isMobile && (
-                <div
-                  className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold  bg-${person.type.toLocaleLowerCase()}-bg text-${person.type.toLocaleLowerCase()}`}
-                  aria-hidden="true"
-                >
-                  {person.initials}
-                </div>
-              )}
-              <div className="min-w-0">
-                <div className="truncate text-sm font-medium">
-                  {person.fullName}
-                </div>
-                <div className="truncate text-xs text-muted-foreground">
-                  {person.role} · Back {person.endDate}
+      {isLoading && <Spinner className="size-8 absolute top-50 left-50" />}
+      {absenceList.length === 0 ? (
+        <NoDataComponent
+          icon={faPeopleRoof}
+          type="personal"
+          infoText="Full Team Today"
+          additionalText="No one has time off scheduled for this date."
+        />
+      ) : (
+        <div
+          ref={listRef}
+          onScroll={scrollCheck}
+          className="grid min-h-0  grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar"
+        >
+          {absenceList.map((person) => (
+            <div
+              key={`${person.fullName}-${person.type}`}
+              className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-border bg-background p-3 transition-colors hover:bg-muted/50"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                {!isMobile && (
+                  <div
+                    className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold  bg-${person.type.toLocaleLowerCase()}-bg text-${person.type.toLocaleLowerCase()}`}
+                    aria-hidden="true"
+                  >
+                    {person.initials}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium">
+                    {person.fullName}
+                  </div>
+                  <div className="truncate text-xs text-muted-foreground">
+                    {person.role} · Back {person.endDate}
+                  </div>
                 </div>
               </div>
-            </div>
-            <span
-              className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize 
+              <span
+                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize 
                 bg-${person.type.toLocaleLowerCase()}-bg text-${person.type.toLocaleLowerCase()}`}
-            >
-              {person.type}
-            </span>
-          </div>
-        ))}
-      </div>
+              >
+                {person.type}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="absolute inset-x-0 bottom-2 flex justify-center animate-bounce">
         {needsScroll ? <FontAwesomeIcon icon={faAnglesDown} /> : ""}
       </div>

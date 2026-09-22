@@ -5,7 +5,7 @@
         Vacation,
         Sick,
         Personal,
-        UnpaidLeave,
+        Unpaid,
         Maternity,
         Other
     }

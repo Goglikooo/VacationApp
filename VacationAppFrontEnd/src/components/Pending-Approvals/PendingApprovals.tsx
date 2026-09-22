@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PendingApprovalItem from "./PendingApprovalItem";
-
+import { NoDataComponent } from "../ui/NoDataComponent";
 import { useRef, useState, useEffect } from "react";
-import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesDown, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { getPendingVacations } from "./../../api/vacationRequests";
 import { Spinner } from "../ui/spinner";
 
@@ -19,10 +19,17 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
   );
 
   useEffect(() => {
-    getPendingVacations().then((res) => {
-      if (res) setLoading(false);
-      setPendingVacations(res.data);
-    });
+    setLoading(true);
+    getPendingVacations()
+      .then((res) => {
+        setPendingVacations(res.data ?? []);
+      })
+      .catch(() => {
+        setPendingVacations([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const checkScroll = () => {
@@ -65,24 +72,35 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
           {pendingVacations.length > 1 ? "Requests" : "Request"}
         </span>
       </div>
-      {loading && <Spinner className="size-8 absolute top-50 left-50" />}
-      <div
-        ref={listRef}
-        onScroll={checkScroll}
-        className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar "
-      >
-        {pendingVacations.map((item) => {
-          return (
-            <PendingApprovalItem
-              key={item.id}
-              name={item.requestedBy.fullName}
-              startDate={item.startDate}
-              endDate={item.endDate}
-              type={item.type}
-            />
-          );
-        })}
-      </div>
+      {loading ? (
+        <Spinner className="size-8 absolute top-50 left-50" />
+      ) : pendingVacations.length === 0 ? (
+        <NoDataComponent
+          icon={faCircleCheck}
+          type="pending"
+          infoText="Nothing to review"
+          additionalText="New requests will show up here as they come in."
+        />
+      ) : (
+        <div
+          ref={listRef}
+          onScroll={checkScroll}
+          className="grid grid-cols-1 gap-2 overflow-y-scroll custom-scrollbar "
+        >
+          {pendingVacations.map((item) => {
+            return (
+              <PendingApprovalItem
+                key={item.id}
+                name={item.requestedBy.fullName}
+                startDate={item.startDate}
+                endDate={item.endDate}
+                type={item.type}
+              />
+            );
+          })}
+        </div>
+      )}
+
       <div className="absolute inset-x-0 bottom-2 flex justify-center animate-bounce">
         {needsScroll ? <FontAwesomeIcon icon={faAnglesDown} /> : ""}
       </div>
