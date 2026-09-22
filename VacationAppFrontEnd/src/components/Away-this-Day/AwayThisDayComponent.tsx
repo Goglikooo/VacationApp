@@ -46,11 +46,13 @@ export default function AwayThisDayComponent({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [absenceList, setAbsenceList] = useState<AbsenceDTO[]>([]);
   const formattedSelectedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
+
   useEffect(() => {
     setIsLoading(true);
     getAbsenceList(`${formattedSelectedDate}`)
       .then((res) => {
         setAbsenceList(res.data);
+        console.log(res.data);
       })
       .catch(() => {
         setAbsenceList([]);
@@ -99,8 +101,9 @@ export default function AwayThisDayComponent({
           {absenceList.length} {absenceList.length > 1 ? "People" : "Person"}
         </span>
       </div>
-      {isLoading && <Spinner className="size-8 absolute top-50 left-50" />}
-      {absenceList.length === 0 ? (
+      {isLoading ? (
+        <Spinner className="size-8 absolute top-50 left-50" />
+      ) : absenceList.length === 0 ? (
         <NoDataComponent
           icon={faPeopleRoof}
           type="personal"
@@ -132,7 +135,7 @@ export default function AwayThisDayComponent({
                     {person.fullName}
                   </div>
                   <div className="truncate text-xs text-muted-foreground">
-                    {person.role} · Back {person.endDate}
+                    {person.role} · Back {person.nextWorkingDay}
                   </div>
                 </div>
               </div>

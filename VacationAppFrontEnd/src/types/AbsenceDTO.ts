@@ -5,5 +5,6 @@ interface AbsenceDTO {
   role: string;
   startDate: string;
   endDate: string;
+  nextWorkingDay: string;
   type: string;
 }
