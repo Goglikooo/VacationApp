@@ -13,9 +13,9 @@ POST {{rootUrl}}/VacationRequests/
 Content-Type: application/json
 {
   "userId": 1,
-  "startDate": "2026-09-22",
-  "endDate": "2026-09-23",
-  "type": "Sick",
+  "startDate": "2026-09-20",
+  "endDate": "2026-09-24",
+  "type": "Vacation",
   "comment": "test vacation2"
 }
 
@@ -35,7 +35,7 @@ DELETE {{rootUrl}}/VacationRequests/10
 Content-Type: application/json
 
 ###
-POST {{rootUrl}}/VacationRequests/16/approve
+POST {{rootUrl}}/VacationRequests/21/approve
 Content-Type: application/json
 
 ###

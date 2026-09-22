@@ -55,11 +55,12 @@ namespace VacationAppBackEnd.Services
 
             var newRequest = new VacationRequest
             {
-                
+
                 UserId = dto.UserId,
                 RequestedBy = user,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
+                NextWorkingDay = CalculateNextWorkingDay(dto.EndDate),
                 Type = dto.Type,
                 Comment = dto.Comment,
                 Status = Enums.VacationRequestStatus.Pending,
@@ -80,6 +81,7 @@ namespace VacationAppBackEnd.Services
                 },
                 StartDate = newRequest.StartDate,
                 EndDate = newRequest.EndDate,
+                NextWorkingDay = CalculateNextWorkingDay(newRequest.EndDate),
                 Type = newRequest.Type,
                 Status = newRequest.Status,
                 Comment = newRequest.Comment,
@@ -89,6 +91,20 @@ namespace VacationAppBackEnd.Services
             return newRequestResponse;
         }
 
+        private static DateOnly CalculateNextWorkingDay(DateOnly date)
+        {
+            var nextDay = date.AddDays(1);
+
+            switch (nextDay.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    return nextDay.AddDays(1);
+                case DayOfWeek.Saturday:
+                    return nextDay.AddDays(2);
+                default:
+                    return nextDay;
+            }
+        }
         public async Task<VacationRequest?> UpdateAsync(int id, UpdateVacationRequestDTO dto)
         {
             var existingRequest = await GetByIdAsync(id);

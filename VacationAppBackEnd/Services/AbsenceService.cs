@@ -14,7 +14,7 @@ namespace VacationAppBackEnd.Services
         }
         public async Task<List<AbsenceDTO>> GetAbsenceListAsync(DateOnly date) => 
             await _context.VacationRequests
-            .Where(v => v.StartDate <= date && v.EndDate >= date && v.Status == Enums.VacationRequestStatus.Approved)
+            .Where(v => v.StartDate <= date && v.NextWorkingDay > date && v.Status == Enums.VacationRequestStatus.Approved)
             .Select(v => new AbsenceDTO
             {
                 Id = v.Id,
@@ -23,9 +23,11 @@ namespace VacationAppBackEnd.Services
                 Role = v.RequestedBy.Role,
                 StartDate = v.StartDate,
                 EndDate = v.EndDate,
+                NextWorkingDay = v.NextWorkingDay,
                 Type = v.Type
 
     })
-            .ToListAsync();
+            .ToListAsync();       
+
     }
 }
