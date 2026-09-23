@@ -73,7 +73,7 @@ export default function PendingApprovals({ boxHeight }: PendingApprovalsProps) {
         </span>
       </div>
       {loading ? (
-        <Spinner className="size-8 absolute top-50 left-50" />
+        <Spinner className="size-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
       ) : pendingVacations.length === 0 ? (
         <NoDataComponent
           icon={faCircleCheck}

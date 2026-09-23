@@ -47,12 +47,37 @@ export default function AwayThisDayComponent({
   const [absenceList, setAbsenceList] = useState<AbsenceDTO[]>([]);
   const formattedSelectedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
 
+  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const formatNextWorkingDate = (date: string) => {
+    const currentDate = new Date(date);
+    const dayOfWeek = currentDate.getDay();
+    const formattedWeekName = weekdays[dayOfWeek - 1];
+    const formattedDateName = currentDate.getDate();
+    const formattedMonthNumber = currentDate.getMonth();
+    const formattedMonth = months[formattedMonthNumber - 1];
+    return `${formattedWeekName}, ${formattedMonth} ${formattedDateName}`;
+  };
+
   useEffect(() => {
     setIsLoading(true);
     getAbsenceList(`${formattedSelectedDate}`)
       .then((res) => {
         setAbsenceList(res.data);
-        console.log(res.data);
       })
       .catch(() => {
         setAbsenceList([]);
@@ -102,7 +127,7 @@ export default function AwayThisDayComponent({
         </span>
       </div>
       {isLoading ? (
-        <Spinner className="size-8 absolute top-50 left-50" />
+        <Spinner className="size-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
       ) : absenceList.length === 0 ? (
         <NoDataComponent
           icon={faPeopleRoof}
@@ -135,7 +160,8 @@ export default function AwayThisDayComponent({
                     {person.fullName}
                   </div>
                   <div className="truncate text-xs text-muted-foreground">
-                    {person.role} · Back {person.nextWorkingDay}
+                    {person.role} · Back on{" "}
+                    {formatNextWorkingDate(person.nextWorkingDay)}
                   </div>
                 </div>
               </div>
