@@ -47,6 +47,7 @@ export default function DashboardPage() {
                 mode="single"
                 selected={selectedDate}
                 month={calendarMonth}
+                weekStartsOn={1}
                 onMonthChange={setCalendarMonth}
                 captionLayout="dropdown"
                 onSelect={(date) => {
