@@ -24,7 +24,7 @@ namespace VacationAppBackEnd.Services
 
         public async Task<User?> RegisterAsync(RegisterUserDTO request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
             {
                 return null;
             }
