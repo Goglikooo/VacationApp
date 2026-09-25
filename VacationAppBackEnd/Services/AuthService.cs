@@ -24,7 +24,10 @@ namespace VacationAppBackEnd.Services
 
         public async Task<User?> RegisterAsync(RegisterUserDTO request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
+
+            var email = request.Email.Trim().ToLower();
+
+            if (await _context.Users.AnyAsync(u => u.Email == email))
             {
                 return null;
             }
@@ -36,7 +39,7 @@ namespace VacationAppBackEnd.Services
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-            user.Email = request.Email.ToLower();
+            user.Email = email;
             user.PasswordHash = hashedPassword;
             user.Role = Enums.UserRole.Employee; // could be changed afterwards. 
 
@@ -51,7 +54,8 @@ namespace VacationAppBackEnd.Services
 
         public async Task<string?> LoginAsync(LoginUserDTO request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+            var email = request.Email.Trim().ToLower();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null) {
                 return null;
@@ -74,18 +78,26 @@ namespace VacationAppBackEnd.Services
             };
 
             var token = _configuration.GetValue<string>("AppSettings:Token");
-
+            var issuer = _configuration.GetValue<string>("AppSettings:Issuer");
+            var audience = _configuration.GetValue<string>("AppSettings:Audience");
             if (string.IsNullOrEmpty(token)) {
                 throw new InvalidOperationException("JWT token is not configured");
             }
+            if (string.IsNullOrEmpty(issuer))
+            {
+                throw new InvalidOperationException("JWT issuer is not configured");
+            }
+            if (string.IsNullOrEmpty(audience))
+            {
+                throw new InvalidOperationException("JWT audience is not configured");
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token));
-
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new JwtSecurityToken(
-                issuer: _configuration.GetValue<string>("AppSettings:Issuer"),
-                audience: _configuration.GetValue<string>("AppSettings:Audience"),
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds

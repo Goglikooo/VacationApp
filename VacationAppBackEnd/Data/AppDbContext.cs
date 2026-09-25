@@ -9,6 +9,10 @@ namespace VacationAppBackEnd.Data
         {
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
     }
