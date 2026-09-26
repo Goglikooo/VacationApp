@@ -57,5 +57,15 @@ namespace VacationAppBackEnd.Controllers
         {
             return Ok("You are Admin!!!");
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDTO>> RefreshToken(RefreshTokenRequestDTO request)
+        {
+            var result = await _service.RefreshTokensAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null) {
+                return Unauthorized("Invalid Refresh token!");
+            }
+            return Ok(result);
+        }
     }
 }

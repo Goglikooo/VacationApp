@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -49,8 +50,6 @@ namespace VacationAppBackEnd.Services
             return user;
 
         }
-
-
         public async Task<TokenResponseDTO?> LoginAsync(LoginUserDTO request)
         {
             var email = request.Email.Trim().ToLower();
@@ -58,18 +57,43 @@ namespace VacationAppBackEnd.Services
 
             if (user == null)
                 return null;
-            if(new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
             {
                 return null;
             }
 
-            var response = new TokenResponseDTO() 
-            {
-                AccessToken= CreateToken(user),
-                RefreshToken= await GenerateAndSaveRefreshTokenAsync(user),
-            };
+            return await CreateTokenResponse(user); ;
+        }
 
-            return response;
+        private async Task<TokenResponseDTO> CreateTokenResponse(User user)
+        {
+            return new TokenResponseDTO()
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+            };
+        }
+
+        public async Task<TokenResponseDTO?> RefreshTokensAsync(RefreshTokenRequestDTO request)
+        {
+            
+            var user = await ValidateRefreshTokenAsync(request.Id, request.RefreshToken);
+            if (user == null) return null;
+                   
+            return await CreateTokenResponse(user);
+
+        }
+
+        private async Task<User?> ValidateRefreshTokenAsync(int id, string refreshToken)
+        {
+           var user = await _context.Users.FindAsync(id);
+            if (user == null || 
+                user.RefreshToken != refreshToken || 
+                user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                return null;
+            }
+            return user;
         }
 
         private string GenerateRefreshToken()
@@ -127,7 +151,5 @@ namespace VacationAppBackEnd.Services
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
-
-       
     }
 }

@@ -7,5 +7,6 @@ namespace VacationAppBackEnd.Services
     {
         Task<User?> RegisterAsync(RegisterUserDTO request);
         Task<TokenResponseDTO?> LoginAsync(LoginUserDTO request);
+        Task<TokenResponseDTO?> RefreshTokensAsync(RefreshTokenRequestDTO request);
     }
 }
