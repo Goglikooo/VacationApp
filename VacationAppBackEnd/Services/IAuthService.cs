@@ -6,6 +6,6 @@ namespace VacationAppBackEnd.Services
     public interface IAuthService
     {
         Task<User?> RegisterAsync(RegisterUserDTO request);
-        Task<string?> LoginAsync(LoginUserDTO request);
+        Task<TokenResponseDTO?> LoginAsync(LoginUserDTO request);
     }
 }

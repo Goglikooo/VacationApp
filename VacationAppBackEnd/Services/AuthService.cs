@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using VacationAppBackEnd.Data;
 using VacationAppBackEnd.DTOs;
@@ -50,7 +51,7 @@ namespace VacationAppBackEnd.Services
         }
 
 
-        public async Task<string?> LoginAsync(LoginUserDTO request)
+        public async Task<TokenResponseDTO?> LoginAsync(LoginUserDTO request)
         {
             var email = request.Email.Trim().ToLower();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -62,7 +63,30 @@ namespace VacationAppBackEnd.Services
                 return null;
             }
 
-            return CreateToken(user);
+            var response = new TokenResponseDTO() 
+            {
+                AccessToken= CreateToken(user),
+                RefreshToken= await GenerateAndSaveRefreshTokenAsync(user),
+            };
+
+            return response;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new Byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+        {
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync();
+            return refreshToken;
         }
 
         private string CreateToken(User user)

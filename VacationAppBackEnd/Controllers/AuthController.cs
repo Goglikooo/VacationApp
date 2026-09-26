@@ -34,14 +34,14 @@ namespace VacationAppBackEnd.Controllers
             return Ok(user);
         }
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(LoginUserDTO request)
+        public async Task<ActionResult<TokenResponseDTO>> Login(LoginUserDTO request)
         {
-            var token = await _service.LoginAsync(request);
-            if (token is null) {
+            var result = await _service.LoginAsync(request);
+            if (result is null) {
                 return BadRequest("Email or Password is incorrect!");
             }
 
-            return Ok(token);
+            return Ok(result);
         }
 
         [Authorize]
