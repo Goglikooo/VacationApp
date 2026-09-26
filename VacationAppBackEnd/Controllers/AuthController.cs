@@ -48,7 +48,14 @@ namespace VacationAppBackEnd.Controllers
         [HttpGet]
         public IActionResult TestAuthorize() 
         {
-            return Ok("Welcome back Admin");
+            return Ok("Welcome You Are Authenticated!");
+        }
+
+        [Authorize(Roles = "Supervisor")]
+        [HttpGet("Admin")]
+        public IActionResult TestAdminAccess() 
+        {
+            return Ok("You are Admin!!!");
         }
     }
 }

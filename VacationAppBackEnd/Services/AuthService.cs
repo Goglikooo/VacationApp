@@ -27,26 +27,24 @@ namespace VacationAppBackEnd.Services
 
             var email = request.Email.Trim().ToLower();
 
-            if (await _context.Users.AnyAsync(u => u.Email == email))
+            
+            if(await _context.Users.AnyAsync(u => u.Email == email))
             {
                 return null;
             }
 
             var user = new User();
-            var hashedPassword = new PasswordHasher<User>()
-                .HashPassword(user, request.Password);
 
-
+            var hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password);
+            
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = email;
             user.PasswordHash = hashedPassword;
-            user.Role = Enums.UserRole.Employee; // could be changed afterwards. 
-
+            user.Role = Enums.UserRole.Employee; // can be changed later
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
             return user;
 
         }
@@ -57,43 +55,43 @@ namespace VacationAppBackEnd.Services
             var email = request.Email.Trim().ToLower();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null) {
+            if (user == null)
                 return null;
-            }
-
             if(new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
             {
                 return null;
             }
+
             return CreateToken(user);
         }
 
         private string CreateToken(User user)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            };
+          var claims = new List<Claim>()
+          {
+              new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+              new Claim(ClaimTypes.Email, user.Email),
+              new Claim(ClaimTypes.Role, user.Role.ToString())
+          };
 
-            var token = _configuration.GetValue<string>("AppSettings:Token");
+            var secret = _configuration.GetValue<string>("AppSettings:Token");
             var issuer = _configuration.GetValue<string>("AppSettings:Issuer");
             var audience = _configuration.GetValue<string>("AppSettings:Audience");
-            if (string.IsNullOrEmpty(token)) {
-                throw new InvalidOperationException("JWT token is not configured");
+
+            if (string.IsNullOrEmpty(secret)){
+                throw new InvalidOperationException("JWT is not configured");
             }
-            if (string.IsNullOrEmpty(issuer))
+            if (string.IsNullOrEmpty(issuer)) 
             {
-                throw new InvalidOperationException("JWT issuer is not configured");
+                throw new InvalidOperationException("JWT Issuer is not configured");
             }
             if (string.IsNullOrEmpty(audience))
             {
-                throw new InvalidOperationException("JWT audience is not configured");
+                throw new InvalidOperationException("JWT Audience is not configured");
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new JwtSecurityToken(
                 issuer: issuer,
@@ -102,6 +100,7 @@ namespace VacationAppBackEnd.Services
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: creds
                 );
+
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
