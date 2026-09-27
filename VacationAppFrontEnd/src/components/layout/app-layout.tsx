@@ -1,8 +1,8 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+import { Outlet } from "react-router-dom";
+export default function AppLayout() {
   return (
     <SidebarProvider
       style={
@@ -16,7 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SidebarInset className="min-h-0 overflow-hidden">
         <SiteHeader />
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          {children}
+          <Outlet />
         </div>
       </SidebarInset>
     </SidebarProvider>
