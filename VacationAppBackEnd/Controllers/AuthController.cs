@@ -34,14 +34,24 @@ namespace VacationAppBackEnd.Controllers
             return Ok(user);
         }
         [HttpPost("login")]
-        public async Task<ActionResult<TokenResponseDTO>> Login(LoginUserDTO request)
+        public async Task<ActionResult<TokenResponseWithoutRefreshDTO>> Login(LoginUserDTO request)
         {
             var result = await _service.LoginAsync(request);
             if (result is null) {
                 return BadRequest("Email or Password is incorrect!");
             }
 
-            return Ok(result);
+            Response.Cookies.Append("refreshToken", result.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //change to true -  when Production
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(1)
+            });
+
+            var response = new TokenResponseWithoutRefreshDTO { AccessToken = result.AccessToken };
+
+            return Ok(response);
         }
 
         [Authorize]
@@ -59,13 +69,31 @@ namespace VacationAppBackEnd.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<TokenResponseDTO>> RefreshToken(RefreshTokenRequestDTO request)
+        public async Task<ActionResult<TokenResponseWithoutRefreshDTO>> RefreshToken()
         {
-            var result = await _service.RefreshTokensAsync(request);
-            if (result is null || result.AccessToken is null || result.RefreshToken is null) {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) 
+            {
+                return Unauthorized("Refresh token is missing!");
+            }
+
+            var result = await _service.RefreshTokensAsync(refreshToken);
+            if (result is null ) {
                 return Unauthorized("Invalid Refresh token!");
             }
-            return Ok(result);
+
+            Response.Cookies.Append("refreshToken", result.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //change to true -  when Production
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(1)
+            });
+
+            return Ok(new TokenResponseWithoutRefreshDTO
+            {
+                AccessToken = result.AccessToken
+            });
         }
     }
 }

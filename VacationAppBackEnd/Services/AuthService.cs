@@ -74,22 +74,20 @@ namespace VacationAppBackEnd.Services
             };
         }
 
-        public async Task<TokenResponseDTO?> RefreshTokensAsync(RefreshTokenRequestDTO request)
+        public async Task<TokenResponseDTO?> RefreshTokensAsync(string refreshToken)
         {
             
-            var user = await ValidateRefreshTokenAsync(request.Id, request.RefreshToken);
+            var user = await ValidateRefreshTokenAsync(refreshToken);
             if (user == null) return null;
                    
             return await CreateTokenResponse(user);
 
         }
 
-        private async Task<User?> ValidateRefreshTokenAsync(int id, string refreshToken)
+        private async Task<User?> ValidateRefreshTokenAsync( string refreshToken)
         {
-           var user = await _context.Users.FindAsync(id);
-            if (user == null || 
-                user.RefreshToken != refreshToken || 
-                user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+           var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
                 return null;
             }
@@ -108,7 +106,7 @@ namespace VacationAppBackEnd.Services
         {
             var refreshToken = GenerateRefreshToken();
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1);
             await _context.SaveChangesAsync();
             return refreshToken;
         }
@@ -145,7 +143,7 @@ namespace VacationAppBackEnd.Services
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: creds
                 );
 
