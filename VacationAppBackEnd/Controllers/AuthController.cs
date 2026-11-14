@@ -49,7 +49,13 @@ namespace VacationAppBackEnd.Controllers
                 Expires = DateTimeOffset.UtcNow.AddDays(1)
             });
 
-            var response = new TokenResponseWithoutRefreshDTO { AccessToken = result.AccessToken };
+            var response = new TokenResponseWithoutRefreshDTO 
+            { 
+                AccessToken = result.AccessToken,
+                UserEmail = result.UserEmail,
+                UserName = result.UserName,
+                UserRole = result.UserRole
+            };
 
             return Ok(response);
         }
@@ -92,7 +98,10 @@ namespace VacationAppBackEnd.Controllers
 
             return Ok(new TokenResponseWithoutRefreshDTO
             {
-                AccessToken = result.AccessToken
+                AccessToken = result.AccessToken,
+                UserEmail = result.UserEmail,
+                UserName = result.UserName,
+                UserRole = result.UserRole
             });
         }
     }

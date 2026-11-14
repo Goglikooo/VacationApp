@@ -71,6 +71,9 @@ namespace VacationAppBackEnd.Services
             {
                 AccessToken = CreateToken(user),
                 RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                UserEmail = user.Email,
+                UserName = user.FirstName,
+                UserRole = user.Role.ToString()
             };
         }
 
