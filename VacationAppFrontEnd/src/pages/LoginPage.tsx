@@ -10,6 +10,7 @@ import {
 } from "./../components/ui/card";
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginRequest } from "../api/authApi";
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
@@ -24,14 +25,13 @@ export default function LoginPage() {
 
     try {
       //api call to log in
-      // if (false) {
-      //   setError("Invalid Username or Password");
-      // }
-
+      setIsLoading(true);
+      await loginRequest(email, password);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError("unable to log in");
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
