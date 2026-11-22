@@ -11,6 +11,7 @@ import {
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
+import axios from "axios";
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -30,8 +31,13 @@ export default function LoginPage() {
       await login(email, password);
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      setError("unable to log in");
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        setError("Email or password is incorrect");
+      } else {
+        setError("Unable to sign in. Please try again.");
+        console.error(err);
+      }
+
       setIsLoading(false);
     } finally {
       setIsLoading(false);
@@ -94,6 +100,11 @@ export default function LoginPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   required
                 />
+                {error && (
+                  <p role="alert" className="text-sm text-red-600">
+                    {error}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between gap-4 text-xs">
