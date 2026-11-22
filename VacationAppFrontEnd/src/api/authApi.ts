@@ -10,7 +10,7 @@ export async function loginRequest(email: string, password: string) {
 }
 
 export async function refreshRequest() {
-  const response = await api.post<AuthResponse>("api/auth/refresh-token");
+  const response = await api.post<AuthResponse>("/api/auth/refresh-token");
   return response.data;
 }
 

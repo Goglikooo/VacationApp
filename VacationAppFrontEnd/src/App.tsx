@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "@/components/layout/app-layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-
+import { AuthProvider } from "./auth/AuthProvider";
 const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   {
@@ -20,9 +20,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <TooltipProvider>
-      <RouterProvider router={router} />
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <RouterProvider router={router} />
+      </TooltipProvider>
+    </AuthProvider>
   );
 }
 

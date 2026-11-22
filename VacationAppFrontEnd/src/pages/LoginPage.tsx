@@ -10,8 +10,9 @@ import {
 } from "./../components/ui/card";
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginRequest } from "../api/authApi";
+import { useAuth } from "../auth/useAuth";
 export default function LoginPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -24,9 +25,9 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      //api call to log in
+      //useAuth call to log in
       setIsLoading(true);
-      await loginRequest(email, password);
+      await login(email, password);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);

@@ -1,19 +1,20 @@
+import { loginRequest, refreshRequest } from "@/api/authApi";
 import { AuthResponse, AuthUser } from "@/types/auth";
 import type { ReactNode } from "react";
-import { useState, useEffect } from "react";
-import { loginRequest, refreshRequest } from "../api/authApi";
-import { AuthContext } from "../auth/AuthContext";
+import { useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export default function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+export function AuthProvider({ children }: AuthProviderProps) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isRestoringSession, setIsRestoringSession] = useState<boolean>(true);
 
   function setSession(response: AuthResponse) {
     setAccessToken(response.accessToken);
+
     setUser({
       userEmail: response.userEmail,
       userName: response.userName,
@@ -34,7 +35,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       setUser(null);
       setAccessToken(null);
     } finally {
-      setIsLoading(false);
+      setIsRestoringSession(false);
     }
   }
 
@@ -50,7 +51,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         accessToken,
         user,
         isAuthenticated,
-        isLoading,
+        isRestoringSession,
         login,
       }}
     >

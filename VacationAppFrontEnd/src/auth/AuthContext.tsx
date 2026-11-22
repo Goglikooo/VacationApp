@@ -5,7 +5,7 @@ export interface AuthContextType {
   accessToken: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
-  isLoading: boolean;
+  isRestoringSession: boolean;
   login: (email: string, password: string) => Promise<void>;
 }
 
