@@ -1,4 +1,5 @@
-﻿using VacationAppBackEnd.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using VacationAppBackEnd.DTOs;
 using VacationAppBackEnd.Models;
 
 namespace VacationAppBackEnd.Services
@@ -8,5 +9,6 @@ namespace VacationAppBackEnd.Services
         Task<User?> RegisterAsync(RegisterUserDTO request);
         Task<TokenResponseDTO?> LoginAsync(LoginUserDTO request);
         Task<TokenResponseDTO?> RefreshTokensAsync(string refreshToken);
+        Task LogOutAsync(string refreshToken);
     }
 }

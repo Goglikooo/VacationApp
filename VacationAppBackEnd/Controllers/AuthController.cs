@@ -46,7 +46,8 @@ namespace VacationAppBackEnd.Controllers
                 HttpOnly = true,
                 Secure = false, //change to true -  when Production
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(1)
+                Expires = DateTimeOffset.UtcNow.AddDays(1),
+                Path = "/",
             });
 
             var response = new TokenResponseWithoutRefreshDTO 
@@ -93,7 +94,8 @@ namespace VacationAppBackEnd.Controllers
                 HttpOnly = true,
                 Secure = false, //change to true -  when Production
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(1)
+                Expires = DateTimeOffset.UtcNow.AddDays(1),
+                Path = "/",
             });
 
             return Ok(new TokenResponseWithoutRefreshDTO
@@ -103,6 +105,27 @@ namespace VacationAppBackEnd.Controllers
                 UserName = result.UserName,
                 UserRole = result.UserRole
             });
+        }
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                await _service.LogOutAsync(refreshToken);
+            }
+            
+
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,  //change to true -  when Production
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+            });
+
+            return Ok("you are logged out successfully");
         }
     }
 }
